@@ -1,0 +1,131 @@
+4.
+declare 
+v_sal number ;
+Cursor high IS Select Staff_sal FROM Staff_masters;
+ 
+begin 
+open high;
+
+LOOP
+FETCH high into v_sal;
+IF high%NOTFOUND
+THEN
+EXIT;
+END IF;
+dbms_output.put_line('salary is '||v_sal);
+IF v_sal*0.3<5000
+THEN
+v_sal:=v_sal+v_sal*0.3;
+ELSE
+v_sal:=v_sal+5000;
+END IF;
+dbms_output.put_line('Changed salary is '||v_sal);
+ 
+END LOOP;
+dbms_output.put_line('Changed salary account :'||high%rowcount);
+CLOSE high;
+END;
+/ 
+
+salary is 17000
+Changed salary is 20400
+salary is 20000
+Changed salary is 24000
+salary is 24000
+Changed salary is 28800
+salary is 20000
+Changed salary is 24000
+salary is 32000
+Changed salary is 37000
+salary is 42000
+Changed salary is 47000
+salary is 62000
+Changed salary is 67000
+salary is 18000
+Changed salary is 21600
+salary is 22000
+Changed salary is 26400
+salary is 32000
+Changed salary is 37000
+Changed salary account :10
+
+PL/SQL procedure successfully completed.
+-------------------------------------------------------------------
+5.
+declare 
+dept_no number(10):=&deptno;
+stcode number ;
+stname varchar2(100);
+sub1 number;
+sub2 number;
+sub3 number;
+total number;
+per number(10,2);
+grade varchar2(1);
+i number:=0;
+
+CURSOR high is Select m1.Student_Code,m1.Student_Name,
+m2.Subject1,m2.Subject2, m2.Subject3 
+FROM Student_masters m1 JOIN Student_Marks m2 ON m1.Student_code=m2.Student_code where m1.dept_code=dept_no;
+ 
+begin 
+open high;
+
+LOOP
+FETCH high into stcode,stname,sub1,sub2,sub3;
+IF high%NOTFOUND
+THEN
+IF (i=0)
+THEN
+dbms_output.put_line('Wrong Department Code');
+END IF;
+EXIT;
+END IF;
+total:=sub1+sub2+sub3;
+per:=total/300*100;
+
+if(sub1<60 or sub2<60 or sub3<60) then
+grade:='D';
+elsif(per>=80) then grade:='A';
+elsif(per>=70) then grade:='B';
+elsif(per>=60) then grade:='C';
+else
+grade:='D';
+END IF;
+dbms_output.put_line(stcode||'  '||stname||'  '||sub1||'  '||sub2||'  '||sub3||'  '||total||'  '||per||'  '||grade);
+i:=i+1;
+END LOOP;
+CLOSE high;
+END;
+/ 
+
+
+Enter value for deptno: 45
+old   2: dept_no number(10):=&deptno;
+new   2: dept_no number(10):=45;
+Wrong Department Code
+
+PL/SQL procedure successfully completed.
+
+
+Enter value for deptno: 10
+old   2: dept_no number(10):=&deptno;
+new   2: dept_no number(10):=10;
+1001  Amit  55  45  78  178  59.33  D
+1002  Ravi  66  74  88  228  76  B
+1008  Dev  72  55  55  182  60.67  D
+1014  Sunil  73  74  65  212  70.67  B
+1020  Amrit  45  55  65  165  55  D
+1001  Amit  68  44  92  204  68  D
+1002  Ravi  89  96  78  263  87.67  A
+1008  Dev  69  44  52  165  55  D
+1014  Sunil  65  64  90  219  73  B
+1020  Amrit  55  45  78  178  59.33  D
+
+PL/SQL procedure successfully completed.
+
+
+---------------------------------------------------------------------------------------
+
+
+
