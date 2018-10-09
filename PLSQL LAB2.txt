@@ -1,0 +1,132 @@
+2.1
+Identify the problems(if any) in the below declarations:
+DECLARE
+V_Sample1 NUMBER(2);
+V_Sample2 CONSTANT NUMBER(2) ;
+V_Sample3 NUMBER(2) NOT NULL ;
+V_Sample4 NUMBER(2) := 50;
+V_Sample5 NUMBER(2) DEFAULT 25;
+
+SQL> DECLARE
+  2  V_Sample1 NUMBER(2);
+  3  V_Sample2 CONSTANT NUMBER(2) ;
+  4  V_Sample3 NUMBER(2) NOT NULL ;
+  5  V_Sample4 NUMBER(2) := 50;
+  6  V_Sample5 NUMBER(2) DEFAULT 25;
+  7  end;
+  8  /
+end;
+*
+ERROR at line 7:
+ORA-06550: line 7, column 1:
+PLS-00103: Encountered the symbol "END" when expecting one of the following:
+begin function pragma procedure subtype type <an identifier>
+<a double-quoted delimited-identifier> current cursor delete
+exists prior
+
+2.2
+The following PL/SQL block is incomplete.
+Modify the block to achieve requirements as stated in the comments in the block.
+DECLARE --outer block
+var_num1 NUMBER := 5;
+BEGIN
+DECLARE --inner block
+var_num1 NUMBER := 10;
+BEGIN
+DBMS_OUTPUT.PUT_LINE('Value for var_num1:' ||var_num1);
+--Can outer block variable (var_num1) be printed here.If Yes,Print the same.
+END;
+--Can inner block variable(var_num1) be printed here.If Yes,Print the same.
+END;
+
+2.3. Write a PL/SQL block to retrieve all staff (code, name, salary) under specific
+department number and display the result. (Note: The Department_Code will be accepted
+from user. Cursor to be used.)
+
+SQL>  DECLARE
+  2  CURSOR C_STAFF IS
+  3  SELECT STAFF_NAME,STAFF_SAL FROM STAFF_MASTERS
+  4  WHERE DEPT_CODE= &DEPT_CODE;
+  5  BEGIN
+  6  FOR X IN C_STAFF
+  7  LOOP
+  8  DBMS_OUTPUT.PUT_LINE(X.STAFF_NAME|| ' ' ||X.STAFF_SAL);
+  9  END LOOP;
+ 10  END;
+ 11  /
+Enter value for dept_code: 20
+old   4: WHERE DEPT_CODE= &DEPT_CODE;
+new   4: WHERE DEPT_CODE= 20;
+Shyam 20000
+Anil 20000
+Smith 62000
+Rahul 22000
+
+PL/SQL procedure successfully completed.
+
+2.4. Write a PL/SQL block to increase the salary by 30 % or 5000 whichever minimum for
+a given Department_Code.
+
+SQL> DECLARE
+  2  V_SAL NUMBER(10,2);
+  3  V_NETAMT NUMBER(10,2);
+  4  CURSOR C_STAFF IS
+  5  SELECT STAFF_SAL INTO V_SAL FROM STAFF_MASTERS
+  6  WHERE DEPT_CODE= &DEPT_CODE;
+  7  BEGIN
+  8  FOR X IN C_STAFF
+  9  LOOP
+ 10  IF X.STAFF_SAL > 5000 THEN
+ 11  X.STAFF_SAL:=X.STAFF_SAL * 0.3;
+ 12  DBMS_OUTPUT.PUT_LINE(X.STAFF_SAL);
+ 13  END IF;
+ 14  END LOOP;
+ 15  END;
+ 16  /
+Enter value for dept_code: 20
+old   6: WHERE DEPT_CODE= &DEPT_CODE;
+new   6: WHERE DEPT_CODE= 20;
+6000
+6000
+18600
+6600
+
+PL/SQL procedure successfully completed.
+
+2.5. Write a PL/SQL block to generate the following report for a given Department code
+Student_Code Sudent_Name Subject1 Subject2 Subject3 Total Percentage
+Grade
+Note: Display suitable error massage if wrong department code has entered and if there
+is no student in the given department.
+For Grade:
+Student should pass in each subject individually (pass marks 60).
+Percent >= 80 then grade= A
+Percent >= 70 and < 80 then grade= B
+Percent >= 60 and < 70 then grade= C
+Else D
+
+
+
+2.6. Write a PL/SQL block to retrieve the details of the staff belonging to a particular
+department. Department code should be passed as a parameter to the cursor.
+
+SQL> DECLARE
+  2  CURSOR C_STAFF IS
+  3  SELECT STAFF_NAME,STAFF_SAL,DEPT_CODE,STAFF_CODE FROM STAFF_MASTERS
+  4  WHERE DEPT_CODE= &DEPT_CODE;
+  5  BEGIN
+  6  FOR X IN C_STAFF
+  7  LOOP
+  8  DBMS_OUTPUT.PUT_LINE(X.STAFF_NAME|| ' ' ||X.STAFF_SAL|| ' ' ||X.DEPT_CODE|| ' '||X.STAFF_CODE);
+  9  END LOOP;
+ 10  END;
+ 11  /
+Enter value for dept_code: 20
+old   4: WHERE DEPT_CODE= &DEPT_CODE;
+new   4: WHERE DEPT_CODE= 20;
+Shyam 20000 20 100002
+Anil 20000 20 100004
+Smith 62000 20 100007
+Rahul 22000 20 100009
+
+PL/SQL procedure successfully completed.
