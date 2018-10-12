@@ -1,0 +1,28 @@
+public class Account {
+	boolean withdraw(){
+		return true;
+	}
+
+}
+
+public class SavingsAccount extends Account {
+	final double minbal=5000.00;
+	boolean withdraw(double cur_bal,double wdamt){
+		if((cur_bal-wdamt)>minbal)
+			return true;
+		else
+		return false;
+	}
+		
+
+}
+
+public class CurrentAccount extends Account {
+	final double ovrdrft_lmt=5000.00;
+	boolean withdraw(double ovrdrft_amt){
+		if(ovrdrft_amt<=ovrdrft_lmt)
+			return true;
+		else
+		return false;
+	}
+}
